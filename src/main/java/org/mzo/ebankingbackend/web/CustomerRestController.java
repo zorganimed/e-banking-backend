@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class CustomerRestController {
 
     private BankAccountService bankAccountService;
@@ -31,7 +32,7 @@ public class CustomerRestController {
     }
 
     @PutMapping("/customers/{customerId}")
-    public  CustomerDTO updaeCUstomer(@PathVariable Long customerId,@RequestBody CustomerDTO customerDTO){
+    public  CustomerDTO updateCustomer(@PathVariable Long customerId,@RequestBody CustomerDTO customerDTO){
         customerDTO.setId(customerId);
         return bankAccountService.updateCustomer(customerDTO);
     }

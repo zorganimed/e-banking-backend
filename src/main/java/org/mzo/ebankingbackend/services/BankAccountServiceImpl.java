@@ -58,7 +58,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         currentAccount.setOverDraft(overDraft);
         currentAccount.setCustomer(customer);
         CurrentAccount currentBankAccount= bankAccountRepository.save(currentAccount);
-        return dtoMapper.fromCurrentBankAccount(currentAccount) ;
+        return dtoMapper.fromCurrentBankAccount(currentBankAccount) ;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class BankAccountServiceImpl implements BankAccountService{
    @Override
     public List<CustomerDTO> listCustomers() {
        List<Customer> customers = customerRepository.findAll();
-       List<CustomerDTO> collect = customers.stream().map(customer -> dtoMapper.fromCustomer(customer)).collect(Collectors.toList());
+       List<CustomerDTO> customerDTOS = customers.stream().map(customer -> dtoMapper.fromCustomer(customer)).collect(Collectors.toList());
 
        /* Méthode impérative
        List<CustomerDTO> customerDTOS = new ArrayList<>();
@@ -89,7 +89,7 @@ public class BankAccountServiceImpl implements BankAccountService{
            CustomerDTO customerDTO = dtoMapper.fromCustomer(cutomer);
            customerDTOS.add(customerDTO);
        }*/
-        return collect;
+        return customerDTOS;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class BankAccountServiceImpl implements BankAccountService{
 
         AccountOperation accountOperation = new AccountOperation();
         accountOperation.setType(OperationType.DEBIT);
-        accountOperation.setAmount(amount);;
+        accountOperation.setAmount(amount);
         accountOperation.setDescription(description);
         accountOperation.setDateOperation(new Date());
         accountOperation.setBankAccount(bankAccount);
@@ -136,8 +136,8 @@ public class BankAccountServiceImpl implements BankAccountService{
                 .orElseThrow(() -> new BankAccountException("Bank account not found"));
 
         AccountOperation accountOperation = new AccountOperation();
-        accountOperation.setType(OperationType.DEBIT);
-        accountOperation.setAmount(amount);;
+        accountOperation.setType(OperationType.CREDIT);
+        accountOperation.setAmount(amount);
         accountOperation.setDescription(description);
         accountOperation.setDateOperation(new Date());
         accountOperation.setBankAccount(bankAccount);
@@ -164,18 +164,17 @@ public class BankAccountServiceImpl implements BankAccountService{
                 return dtoMapper.fromCurrentBankAccount((CurrentAccount) account);
         }).collect(Collectors.toList());*/
         List<BankAccount> bankAccounts = bankAccountRepository.findAll();
-        List<BankAccountDTO> collect = bankAccounts.stream().map(bankAccount -> {
+        List<BankAccountDTO> bankAccountDTOS = bankAccounts.stream().map(bankAccount -> {
             if (bankAccount instanceof SavingAccount) {
                 SavingAccount savingAccount = (SavingAccount) bankAccount;
                 return dtoMapper.fromSavingBankAccount(savingAccount);
             } else {
                 CurrentAccount currentAccount = (CurrentAccount) bankAccount;
                 return dtoMapper.fromCurrentBankAccount(currentAccount);
-
             }
         }).collect(Collectors.toList());
 
-        return collect;
+        return bankAccountDTOS;
     }
 
     @Override
@@ -189,13 +188,13 @@ public class BankAccountServiceImpl implements BankAccountService{
     public CustomerDTO updateCustomer(CustomerDTO customerDTO) {
         log.info("saving new Customer");
         Customer customer = dtoMapper.fromCustomerDTO(customerDTO);
-        Customer savedCustomer = customerRepository.save(customer) ;
-        return dtoMapper.fromCustomer(savedCustomer);
+        Customer updatedCustomer = customerRepository.save(customer) ;
+        return dtoMapper.fromCustomer(updatedCustomer);
     }
 
     @Override
-    public void deleteCustomer(Long cusomerId){
-        customerRepository.deleteById(cusomerId);
+    public void deleteCustomer(Long customerId){
+        customerRepository.deleteById(customerId);
     }
 
     @Override
