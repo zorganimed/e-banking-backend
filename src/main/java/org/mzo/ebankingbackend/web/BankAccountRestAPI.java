@@ -8,15 +8,13 @@ import org.mzo.ebankingbackend.entities.AccountOperation;
 import org.mzo.ebankingbackend.entities.BankAccount;
 import org.mzo.ebankingbackend.exceptions.BankAccountException;
 import org.mzo.ebankingbackend.services.BankAccountService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class BankAccountRestAPI {
 
     private BankAccountService bankAccountService;
