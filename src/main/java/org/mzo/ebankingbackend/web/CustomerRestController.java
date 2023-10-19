@@ -52,7 +52,6 @@ public class CustomerRestController {
     @GetMapping("/customers/{customerId}/accounts")
     public List<BankAccountDTO> getCustomerAccounts(@PathVariable Long customerId){
 
-        System.out.println("account id is  "+customerId);
         return this.bankAccountService.getCustomerAccounts(customerId);
     }
 

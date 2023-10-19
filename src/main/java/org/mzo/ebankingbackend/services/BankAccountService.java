@@ -38,4 +38,6 @@ public interface BankAccountService {
     List<CustomerDTO> searchCustomers(String keyword);
 
     List<BankAccountDTO> getCustomerAccounts(Long customerId);
+
+    void deleteAccount(String accountId);
 }

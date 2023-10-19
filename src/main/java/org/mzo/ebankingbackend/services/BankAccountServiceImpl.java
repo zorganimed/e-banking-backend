@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mzo.ebankingbackend.dtos.*;
 import org.mzo.ebankingbackend.entities.*;
+import org.mzo.ebankingbackend.enums.AccountStatus;
 import org.mzo.ebankingbackend.enums.OperationType;
 import org.mzo.ebankingbackend.exceptions.BalanceNotSufficientException;
 import org.mzo.ebankingbackend.exceptions.BankAccountException;
@@ -57,6 +58,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         currentAccount.setBalance(initialBalance);
         currentAccount.setOverDraft(overDraft);
         currentAccount.setCustomer(customer);
+        currentAccount.setStatus(AccountStatus.CREATED);
         CurrentAccount currentBankAccount= bankAccountRepository.save(currentAccount);
         return dtoMapper.fromCurrentBankAccount(currentBankAccount) ;
     }
@@ -73,6 +75,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         savingAccount.setBalance(initialBalance);
         savingAccount.setInterestRate(interestRate);
         savingAccount.setCustomer(customer);
+        savingAccount.setStatus(AccountStatus.CREATED);
 
         SavingAccount savingBankAccount = bankAccountRepository.save(savingAccount);
         return dtoMapper.fromSavingBankAccount(savingBankAccount);
@@ -245,6 +248,11 @@ public class BankAccountServiceImpl implements BankAccountService{
         }).collect(Collectors.toList());
 
         return bankAccountDTOS;
+    }
+
+    @Override
+    public void deleteAccount(String accountId){
+        bankAccountRepository.deleteById(accountId);
     }
 
 

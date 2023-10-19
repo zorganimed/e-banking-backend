@@ -63,4 +63,9 @@ public class BankAccountRestAPI {
 
     }
 
+    @DeleteMapping("/accounts/{id}")
+    public void deleteAccount(@PathVariable String id){
+        bankAccountService.deleteAccount(id);
+    }
+
 }
