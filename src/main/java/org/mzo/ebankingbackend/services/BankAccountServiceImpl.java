@@ -211,7 +211,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElse(null);
         if(bankAccount == null)
             throw new BankAccountException("Account not found");
-        Page<AccountOperation> accountOperations = accountOperationRepository.findByBankAccountId(accountId, PageRequest.of(page, size));
+        Page<AccountOperation> accountOperations = accountOperationRepository.findByBankAccountIdOrderByDateOperationDesc(accountId, PageRequest.of(page, size));
         AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
         List<AccountOperationDTO>  accountOperationDTOS = accountOperations.getContent().stream().map(operation -> dtoMapper.fromAccountOperation(operation)).collect(Collectors.toList());
         accountHistoryDTO.setAccountOperationDTOS(accountOperationDTOS);
@@ -228,6 +228,26 @@ public class BankAccountServiceImpl implements BankAccountService{
         List<Customer> customers = customerRepository.findByNameContains(keyword);
         List<CustomerDTO> customerDTOS = customers.stream().map(customer -> dtoMapper.fromCustomer(customer)).collect(Collectors.toList());
         return customerDTOS;
+    }
+
+    @Override
+    public List<BankAccountDTO> getCustomerAccounts(Long customerId) {
+
+        System.out.println("inside getCustomerAccounts");
+        List<BankAccount> bankAccounts = bankAccountRepository.findByCustomerId(customerId);
+        System.out.println("******************************");
+        bankAccounts.stream().forEach(System.out::println);
+        List<BankAccountDTO> bankAccountDTOS = bankAccounts.stream().map(account->{
+            if(account instanceof SavingAccount){
+                SavingAccount  savingAccount = (SavingAccount) account;
+                return dtoMapper.fromSavingBankAccount(savingAccount);
+            }else{
+                CurrentAccount currentAccount = new CurrentAccount();
+                return dtoMapper.fromCurrentBankAccount(currentAccount);
+            }
+        }).collect(Collectors.toList());
+        bankAccountDTOS.stream().forEach(System.out::println);
+        return bankAccountDTOS;
     }
 
 

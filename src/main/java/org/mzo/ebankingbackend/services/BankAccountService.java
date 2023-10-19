@@ -29,11 +29,13 @@ public interface BankAccountService {
 
     CustomerDTO updateCustomer(CustomerDTO customerDTO);
 
-    void deleteCustomer(Long cusomerId);
+    void deleteCustomer(Long customerId);
 
     List<AccountOperationDTO> accountHistory(String accountId);
 
     AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountException;
 
     List<CustomerDTO> searchCustomers(String keyword);
+
+    List<BankAccountDTO> getCustomerAccounts(Long customerId);
 }

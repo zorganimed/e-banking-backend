@@ -1,11 +1,8 @@
 package org.mzo.ebankingbackend.web;
 
 import lombok.AllArgsConstructor;
-import org.mzo.ebankingbackend.dtos.AccountHistoryDTO;
-import org.mzo.ebankingbackend.dtos.AccountOperationDTO;
-import org.mzo.ebankingbackend.dtos.BankAccountDTO;
-import org.mzo.ebankingbackend.entities.AccountOperation;
-import org.mzo.ebankingbackend.entities.BankAccount;
+import org.mzo.ebankingbackend.dtos.*;
+import org.mzo.ebankingbackend.exceptions.BalanceNotSufficientException;
 import org.mzo.ebankingbackend.exceptions.BankAccountException;
 import org.mzo.ebankingbackend.services.BankAccountService;
 import org.springframework.web.bind.annotation.*;
@@ -40,4 +37,30 @@ public class BankAccountRestAPI {
                                                      @RequestParam(name = "size", defaultValue = "5") int size) throws BankAccountException {
         return  bankAccountService.getAccountHistory(accountId,page,size);
     }
+
+    @PostMapping("/accounts/debit")
+    public DebitDTO debit(@RequestBody DebitDTO debitDTO) throws BankAccountException, BalanceNotSufficientException {
+
+        this.bankAccountService.debit(debitDTO.getAccountId(), debitDTO.getAmount(),debitDTO.getDescription());
+        return debitDTO;
+
+    }
+
+    @PostMapping("/accounts/credit")
+    public CreditDTO credit(@RequestBody CreditDTO creditDTO) throws BankAccountException {
+
+        this.bankAccountService.credit(creditDTO.getAccountId(), creditDTO.getAmount(),creditDTO.getDescription());
+        return creditDTO;
+
+    }
+
+    @PostMapping("/accounts/transfer")
+    public void transfer(@RequestBody TransferRequestDTO transferRequestDTO) throws BankAccountException, BalanceNotSufficientException {
+
+        this.bankAccountService.transfer(transferRequestDTO.getAccountSource(),
+                                         transferRequestDTO.getAccountDestination() ,
+                                         transferRequestDTO.getAmount());
+
+    }
+
 }
