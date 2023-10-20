@@ -3,6 +3,7 @@ package org.mzo.ebankingbackend.web;
 import lombok.AllArgsConstructor;
 import org.mzo.ebankingbackend.dtos.BankAccountDTO;
 import org.mzo.ebankingbackend.dtos.CustomerDTO;
+import org.mzo.ebankingbackend.dtos.CustomersPageDTO;
 import org.mzo.ebankingbackend.entities.Customer;
 import org.mzo.ebankingbackend.exceptions.CustomerNotFoundException;
 import org.mzo.ebankingbackend.services.BankAccountService;
@@ -53,6 +54,13 @@ public class CustomerRestController {
     public List<BankAccountDTO> getCustomerAccounts(@PathVariable Long customerId){
 
         return this.bankAccountService.getCustomerAccounts(customerId);
+    }
+
+    @GetMapping("/customers/searchByName")
+    public CustomersPageDTO searchCustomers(@RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                            @RequestParam(name = "page", defaultValue = "0") int page,
+                                            @RequestParam(name = "size", defaultValue = "1") int size){
+        return bankAccountService.searchCustomerPage("%"+keyword+"%",page,size);
     }
 
 }

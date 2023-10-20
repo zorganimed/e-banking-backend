@@ -40,4 +40,6 @@ public interface BankAccountService {
     List<BankAccountDTO> getCustomerAccounts(Long customerId);
 
     void deleteAccount(String accountId);
+
+    CustomersPageDTO searchCustomerPage(String customerName, int page, int size);
 }
