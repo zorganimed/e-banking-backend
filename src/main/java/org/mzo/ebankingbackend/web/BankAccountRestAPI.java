@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.mzo.ebankingbackend.dtos.*;
 import org.mzo.ebankingbackend.exceptions.BalanceNotSufficientException;
 import org.mzo.ebankingbackend.exceptions.BankAccountException;
+import org.mzo.ebankingbackend.exceptions.CustomerNotFoundException;
 import org.mzo.ebankingbackend.services.BankAccountService;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,4 +69,21 @@ public class BankAccountRestAPI {
         bankAccountService.deleteAccount(id);
     }
 
+    @PutMapping("/accounts/update/{accountId}")
+    public BankAccountDTO updateAccount(@PathVariable String accountId) throws BankAccountException, CustomerNotFoundException {
+
+        return bankAccountService.updateAccount(accountId);
+    }
+
+    @PostMapping("accounts/addSavingAccount/{customerId}")
+    public SavingBankAccountDTO saveSavingAccount( @RequestBody SavingBankAccountDTO savingBankAccountDTO,
+                                                   @PathVariable Long customerId) throws CustomerNotFoundException {
+        return bankAccountService.saveSavingBankAccount(savingBankAccountDTO.getBalance(),savingBankAccountDTO.getInterestRate(),customerId);
+    }
+
+    @PostMapping("/accounts/addCurrentAccount/{customerId}")
+    public CurrentBankAccountDTO saveCurrentAccount(@RequestBody CurrentBankAccountDTO currentBankAccountDTO,
+                                                    @PathVariable Long customerId) throws CustomerNotFoundException {
+        return bankAccountService.saveCurrentBankAccount(currentBankAccountDTO.getBalance(),currentBankAccountDTO.getOverDraft(), customerId);
+    }
 }

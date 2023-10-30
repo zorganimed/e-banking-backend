@@ -108,6 +108,7 @@ public class BankAccountServiceImpl implements BankAccountService{
             CurrentAccount currentAccount = (CurrentAccount) bankAccount;
             return dtoMapper.fromCurrentBankAccount(currentAccount);
         }
+
     }
 
     @Override
@@ -269,4 +270,24 @@ public class BankAccountServiceImpl implements BankAccountService{
         return customersPageDTO;
 
     }
+
+    @Override
+    public BankAccountDTO updateAccount(String accountId) throws CustomerNotFoundException, BankAccountException {
+
+        //Customer customer = customerRepository.findById(customerId).orElseThrow(()->new CustomerNotFoundException("Customer not found"));
+        BankAccountDTO bankAccountDTO = bankAccountRepository.findById(accountId).map(
+              account-> {
+                  if(account instanceof SavingAccount){
+                      account.setCreateDate(new Date());
+                      return dtoMapper.fromSavingBankAccount((SavingAccount) account);
+                  }else{
+                      account.setCreateDate(new Date());
+                      return dtoMapper.fromCurrentBankAccount((CurrentAccount) account);
+                  }
+
+              }
+        ).orElseThrow(()->new BankAccountException("Account "+accountId+" not found"));
+        return  bankAccountDTO;
+    }
+
 }

@@ -42,4 +42,6 @@ public interface BankAccountService {
     void deleteAccount(String accountId);
 
     CustomersPageDTO searchCustomerPage(String customerName, int page, int size);
+
+    BankAccountDTO updateAccount(String accountId) throws CustomerNotFoundException, BankAccountException;
 }
